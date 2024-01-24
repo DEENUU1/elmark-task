@@ -29,13 +29,14 @@ def delete_category_object(category_name: str) -> Dict[str, Optional[str]]:
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
 
-    parts_in_category = collection_parts.find({"category": category_name})
-    if parts_in_category.count() > 0:
+    parts_in_category = list(collection_parts.find({"category": category_name}))
+    if len(parts_in_category) > 0:
         raise HTTPException(status_code=400, detail="Cannot delete a category with assigned parts")
 
     child_categories = collection_categories.find({"parent_name": category_name})
     for child_category in child_categories:
-        if collection_parts.find({"category": child_category["name"]}).count() > 0:
+        child_category_parts = list(collection_parts.find({"category": child_category["name"]}))
+        if len(child_category_parts) > 0:
             raise HTTPException(
                 status_code=400,
                 detail="Cannot delete a parent category with child categories having assigned parts"

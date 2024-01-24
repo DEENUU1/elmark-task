@@ -5,7 +5,7 @@ from models.parts import Part
 
 
 router = APIRouter(
-    prefix="/api/v1/part",
+    prefix="/part",
     tags=["part"],
 )
 

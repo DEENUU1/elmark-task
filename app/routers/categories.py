@@ -9,7 +9,7 @@ from services.categories import (
 )
 
 router = APIRouter(
-    prefix="/api/v1/category",
+    prefix="/category",
     tags=["category"]
 )
 
