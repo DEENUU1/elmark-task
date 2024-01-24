@@ -6,6 +6,8 @@ from serializers.parts import part_serializer
 
 
 def create_part_object(part: Part) -> Dict[str, Any]:
-    _id = collection_parts.insert_one(dict(part))
-    part = part_serializer(collection_parts.find({"_id": _id.inserted_id}))
-    return {"part": part}
+    result = collection_parts.insert_one(dict(part))
+    inserted_id = result.inserted_id
+    inserted_part = collection_parts.find_one({"_id": inserted_id})
+    serialized_part = part_serializer(inserted_part)
+    return {"part": serialized_part}
