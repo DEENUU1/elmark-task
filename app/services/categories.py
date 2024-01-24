@@ -14,3 +14,9 @@ def create_category_object(category: Category) -> Dict[str, Optional[str]]:
 def get_category_object(category_id: str) -> Dict[str, Optional[str]]:
     inserted_category = collection_categories.find_one({"_id": category_id})
     return get_category_serializer(inserted_category)
+
+
+def update_category_object(category_id: str, category: Category) -> Dict[str, Optional[str]]:
+    collection_categories.update_one({"_id": category_id}, {"$set": category.dict()})
+    inserted_category = collection_categories.find_one({"_id": category_id})
+    return get_category_serializer(inserted_category)
