@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class Parts(BaseModel):
+class Part(BaseModel):
     serial_number: str
     name: str
     description: str
