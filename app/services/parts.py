@@ -8,6 +8,8 @@ from serializers.parts import get_part_serializer
 
 
 def create_part_object(part: Part) -> Dict[str, Any]:
+    # Todo ensure that part is not assigned to 'base' category
+    # Todo part should be unique based on serial_number
     _id = get_parts_collection().insert_one(part.dict()).inserted_id
     inserted_part = get_parts_collection().find_one({"_id": _id})
     return get_part_serializer(inserted_part)
