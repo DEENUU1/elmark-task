@@ -1,6 +1,8 @@
 from typing import Dict, Optional
 
-from config.database import collection_categories
+from fastapi import HTTPException
+
+from config.database import collection_categories, collection_parts
 from models.categories import Category
 from serializers.categories import get_category_serializer
 
@@ -20,3 +22,27 @@ def update_category_object(category_id: str, category: Category) -> Dict[str, Op
     collection_categories.update_one({"_id": category_id}, {"$set": category.dict()})
     inserted_category = collection_categories.find_one({"_id": category_id})
     return get_category_serializer(inserted_category)
+
+
+def delete_category_object(category_name: str) -> Dict[str, Optional[str]]:
+    category = collection_categories.find_one({"name": category_name})
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+
+    parts_in_category = collection_parts.find({"category": category_name})
+    if parts_in_category.count() > 0:
+        raise HTTPException(status_code=400, detail="Cannot delete a category with assigned parts")
+
+    child_categories = collection_categories.find({"parent_name": category_name})
+    for child_category in child_categories:
+        if collection_parts.find({"category": child_category["name"]}).count() > 0:
+            raise HTTPException(
+                status_code=400,
+                detail="Cannot delete a parent category with child categories having assigned parts"
+            )
+
+    result = collection_categories.delete_one({"name": category_name})
+    if result.deleted_count == 1:
+        return {"message": "Category deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Category not found")
