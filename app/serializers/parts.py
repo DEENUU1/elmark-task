@@ -1,5 +1,5 @@
 from models.parts import Part
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 
 def get_part_serializer(part: Part) -> Dict[str, Any]:
@@ -13,3 +13,7 @@ def get_part_serializer(part: Part) -> Dict[str, Any]:
         "price": part["price"],
         "location": part["location"],
     }
+
+
+def get_parts_serializer(parts: [Part]) -> List[Dict[str, Any]]:
+    return [get_part_serializer(part) for part in parts]

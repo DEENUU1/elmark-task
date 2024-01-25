@@ -7,6 +7,12 @@ from serializers.categories import get_category_serializer
 
 
 def create_category_object(category: Category, collection: Any) -> Dict[str, Optional[str]]:
+    if collection.find_one({"name": category.name}):
+        raise HTTPException(status_code=400, detail="Category already exists")
+
+    if category.parent_name and not collection.find_one({"name": category.parent_name}):
+        raise HTTPException(status_code=400, detail="Parent category does not exist")
+    
     _id = collection.insert_one(category.dict()).inserted_id
     inserted_category = collection.find_one({"_id": _id})
     return get_category_serializer(inserted_category)

@@ -20,3 +20,11 @@ class Part(BaseModel):
     price: float
     location: Location
 
+
+class SearchParams(BaseModel):
+    serial_number: Optional[str] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    quantity: Optional[int] = None
+    price: Optional[float] = None

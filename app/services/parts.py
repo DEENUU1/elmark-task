@@ -1,9 +1,9 @@
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, List
 
 from fastapi import HTTPException
 
 from models.parts import Part
-from serializers.parts import get_part_serializer
+from serializers.parts import get_part_serializer, get_parts_serializer
 from .categories import get_category_object
 
 
@@ -48,15 +48,14 @@ def delete_part_object(serial_number: str, collection: Any) -> Dict[str, Any]:
     return get_part_serializer(part)
 
 
-def search_part(query_params: Dict[str, Any], collection: Any) -> List[Optional[Dict[str, Any]]]:
+def list_search_part_objects(query_params: Dict[str, Any], collection: Any) -> List[Dict[str, Any]]:
     filter_query = {}
     for key, value in query_params.items():
-        if key == "location":
-            for loc_key, loc_value in value.items():
-                filter_query[f"location.{loc_key}"] = loc_value
-        else:
+        if value is not None:
             filter_query[key] = value
 
-    result = list(collection.find(filter_query))
+    inserted_parts = list(collection.find(filter_query))
+    if not inserted_parts:
+        raise HTTPException(status_code=404, detail="Part not found")
 
-    return result
+    return get_parts_serializer(inserted_parts)

@@ -1,13 +1,13 @@
-from typing import Dict, Any, Optional
-from fastapi import APIRouter, Depends, Query
+from typing import Dict, Any, List
+from fastapi import APIRouter, Depends
 from config.database import get_parts_collection, get_categories_collection
-from models.parts import Part, Location
+from models.parts import Part, SearchParams
 from services.parts import (
     create_part_object,
     get_part_object,
     update_part_object,
     delete_part_object,
-    search_part
+    list_search_part_objects
 )
 
 
@@ -37,26 +37,7 @@ def delete_part(serial_number: str, collection: Any = Depends(get_parts_collecti
     return delete_part_object(serial_number, collection)
 
 
-@router.get("/search")
-def search_part(
-    serial_number: Optional[str] = Query(None, alias="serial-number"),
-    name: Optional[str] = None,
-    description: Optional[str] = None,
-    category: Optional[str] = None,
-    quantity: Optional[int] = None,
-    price: Optional[float] = None,
-    location: Optional[Location] = None,
-    collection: Any = Depends(get_parts_collection)
-):
-    query_params = {
-        "serial_number": serial_number,
-        "name": name,
-        "description": description,
-        "category": category,
-        "quantity": quantity,
-        "price": price,
-        "location": location.dict() if location else None
-    }
-
-    results = search_part(query_params, collection)
+@router.get("s")
+def list_search_parts(query_params: SearchParams = Depends(), collection: Any = Depends(get_parts_collection)) -> List[Dict[str, Any]]:
+    results = list_search_part_objects(query_params.dict(exclude_unset=True), collection)
     return results
