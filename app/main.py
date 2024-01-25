@@ -15,4 +15,10 @@ app.include_router(router)
 
 @app.get("/")
 def root() -> Dict[str, str]:
+    """
+    Root endpoint to check the status of the application.
+
+    Returns:
+        Dict[str, str]: A dictionary indicating the status of the application.
+    """
     return {"status": "ok"}
