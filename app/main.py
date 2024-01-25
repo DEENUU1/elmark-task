@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from config.settings import settings
-from api import router
+from routers.api import router
 
 
 app = FastAPI(

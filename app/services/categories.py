@@ -42,7 +42,6 @@ def update_category_object(
     return get_category_serializer(inserted_category)
 
 
-
 def delete_category_object(category_name: str, collection: Any, collection_parts: Any) -> Dict[str, Optional[str]]:
     category = collection.find_one({"name": category_name})
     if not category:
@@ -61,9 +60,9 @@ def delete_category_object(category_name: str, collection: Any, collection_parts
                 detail="Cannot delete a parent category with child categories having assigned parts"
             )
 
-    # result = collection.delete_one({"name": category_name})
-    # if result.deleted_count == 1:
-    return {"message": "Category deleted successfully"}
-    # else:
-    #     raise HTTPException(status_code=404, detail="Category not found")
+    result = collection.delete_one({"name": category_name})
+    if result.deleted_count == 1:
+        return {"message": "Category deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Category not found")
 

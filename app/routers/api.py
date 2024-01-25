@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from routers import categories, parts
+from routers.v1 import categories, parts
 
 router = APIRouter(
     prefix="/api/v1"
