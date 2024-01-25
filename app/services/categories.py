@@ -21,8 +21,8 @@ def create_category_object(
     - CategorySchema: The newly created category as a CategorySchema object.
     """
 
-    # Check if a category with the same name already exists
-    if collection.find_one({"name": category.name}):
+    # Check if a category with the same name and parent_name already exists
+    if collection.find_one({"name": category.name, "parent_name": category.parent_name}):
         raise HTTPException(status_code=400, detail="Category already exists")
 
     # Check if the specified parent category exists
@@ -79,9 +79,15 @@ def update_category_object(
     if inserted_category is None:
         raise HTTPException(status_code=404, detail="Category not found")
 
-    # Check if updating to the specified name would result in a duplicate category
-    if category.name != category_name:
-        duplicated_category = collection.find_one({"name": category.name})
+    # Check if updating to the specified name and parent_name would result in a duplicate category
+    if (
+        category.name != category_name or
+        category.parent_name != inserted_category.get("parent_name", None)
+    ):
+        duplicated_category = collection.find_one({
+            "name": category.name,
+            "parent_name": category.parent_name
+        })
         if duplicated_category:
             raise HTTPException(status_code=400, detail="Category already exists")
 

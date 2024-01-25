@@ -13,6 +13,7 @@ Instead, I created my own database and deployed the project to an AWS EC2 instan
 I also used the Continuous Deployment (CD) technique using AWS Actions to automatically deploy code to an AWS EC2 instance
 
 <img src="assets/elmark.drawio.png" alt="architecture"/>
+<img src="assets/elmark-Strona-2.drawio.png" alt="architecture"/>
 
 #### Why FastAPI
 I chose the FastAPI framework because of:

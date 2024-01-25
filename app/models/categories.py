@@ -4,5 +4,5 @@ from pydantic import BaseModel, Field
 
 
 class Category(BaseModel):
-    name: str = Field(unique=True)
+    name: str
     parent_name: Optional[str] = None

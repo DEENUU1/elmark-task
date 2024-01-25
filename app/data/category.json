@@ -1,0 +1,33 @@
+[
+    {
+        "name": "Grzejniki"
+    },
+    {
+        "name": "Narzedzia"
+    },
+    {
+        "name": "Grzejniki aluminiowe",
+        "parent_name": "Grzejniki"
+    },
+    {
+        "name": "Grzejniki stalowe",
+        "parent_name": "Grzejniki"
+    },
+    {
+        "name": "Akcesoria",
+        "parent_name": "Grzejniki"
+    },
+    {
+        "name": "Pedzle",
+        "parent_name": "Narzedzia"
+    },
+    {
+        "name": "Materialy scierne",
+        "parent_name": "Narzedzia"
+    },
+    {
+        "name": "Akcesoria",
+        "parent_name": "Pedzle"
+    }
+
+]

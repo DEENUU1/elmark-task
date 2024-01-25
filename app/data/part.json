@@ -1,0 +1,98 @@
+[
+    {
+        "serial_number": "alice_kfa",
+        "name": "Alice KFA",
+        "description": "Short description...",
+        "category": "Grzejniki aluminiowe",
+        "quantity": 5,
+        "price": 340,
+        "location": {
+            "room": "101",
+            "bookcase": "A",
+            "shelf": 1,
+            "cuvette": null,
+            "column": null,
+            "row": null
+        }
+    },
+        {
+        "serial_number": "extrathermserir300302",
+        "name": "Extrathermserir",
+        "description": "Short description...",
+        "category": "Grzejniki aluminiowe",
+        "quantity": 1,
+        "price": 600,
+        "location": {
+            "room": 10,
+            "bookcase": "A",
+            "shelf": 1,
+            "cuvette": 10,
+            "column": 5,
+            "row": 3
+        }
+    },
+        {
+        "serial_number": "pirmo_cv11",
+        "name": "Grzejnik Pirmo CV11",
+        "description": "Short description...",
+        "category": "Grzejniki stalowe",
+        "quantity": 100,
+        "price": 150,
+        "location": {
+            "room": 14,
+            "bookcase": 2,
+            "shelf": 1,
+            "cuvette": 2,
+            "column": 1,
+            "row": 3
+        }
+    },
+        {
+        "serial_number": "perfekt_c11_h-900",
+        "name": "Grzejnik Perfekt C11 H-900",
+        "description": "Short description...",
+        "category": "Grzejniki stalowe",
+        "quantity": 2,
+        "price": 53,
+        "location": {
+            "room": "101VD",
+            "bookcase": "AB",
+            "shelf": 1,
+            "cuvette": null,
+            "column": null,
+            "row": null
+        }
+    },
+        {
+        "serial_number": "korek_8880222",
+        "name": "Korek krzejnikowy",
+        "description": "Short description...",
+        "category": "Akcesoria",
+        "quantity": 800,
+        "price": 5,
+        "location": {
+            "room": "101",
+            "bookcase": "A",
+            "shelf": 1,
+            "cuvette": null,
+            "column": null,
+            "row": null
+        }
+    },
+        {
+        "serial_number": "złączka_00_xx_23",
+        "name": "Zlaczka grzejnikowa",
+        "description": "Short description...",
+        "category": "Akcesoria",
+        "quantity": 999,
+        "price": 340,
+        "location": {
+            "room": 15,
+            "bookcase": "A",
+            "shelf": 1,
+            "cuvette": 5,
+            "column": 3,
+            "row": 20
+        }
+    }
+]
