@@ -9,7 +9,7 @@ from services.categories import (
 )
 from config.database import get_parts_collection, get_categories_collection
 from typing import Any, Dict
-from schemas.categories import CategorySchema, CategoryUpdateSchema
+from schemas.categories import CategorySchema
 from fastapi import status
 
 
@@ -61,12 +61,12 @@ def get_category(
     return get_category_object(name, collection)
 
 
-@router.put("/{name}", response_model=CategoryUpdateSchema, status_code=status.HTTP_200_OK)
+@router.put("/{name}", response_model=CategorySchema, status_code=status.HTTP_200_OK)
 def update_category(
         name: str,
-        category: CategoryUpdateSchema,
+        category: CategorySchema,
         collection: Any = Depends(get_categories_collection)
-) -> CategoryUpdateSchema:
+) -> CategorySchema:
     """
     Update a category by name.
 

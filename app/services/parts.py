@@ -29,7 +29,7 @@ def create_part_object(
         raise HTTPException(status_code=404, detail="Category not found")
 
     # Check if the category is the 'base' category, and disallow assigning parts to it
-    if not existing_category["parent_name"]:
+    if existing_category.parent_name is None:
         raise HTTPException(status_code=400, detail="Cannot assign part to 'base' category")
 
     # Check if a part with the same serial number already exists
@@ -83,8 +83,9 @@ def update_part_object(
     Returns:
     - PartSchema: The updated part as a PartSchema object.
     """
-    # Check if the part with the specified serial number exists
     existing_part = collection.find_one({"serial_number": serial_number})
+
+    # Check if the part with the specified serial number exists
     if not existing_part:
         raise HTTPException(status_code=404, detail="Part not found")
 
@@ -95,6 +96,7 @@ def update_part_object(
 
     update_data = {
         "$set": {
+            "serial_number": part.serial_number,
             "name": part.name,
             "description": part.description,
             "category": part.category,
@@ -106,9 +108,8 @@ def update_part_object(
 
     collection.update_one({"serial_number": serial_number}, update_data)
 
-    updated_part = collection.find_one({"serial_number": serial_number})
+    updated_part = collection.find_one({"serial_number": part.serial_number})
     return PartSchema(**updated_part)
-
 
 def delete_part_object(
         serial_number: str,
