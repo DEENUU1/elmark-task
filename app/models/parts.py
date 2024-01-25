@@ -1,5 +1,7 @@
-from pydantic import BaseModel, Field
-from typing import Union, Optional
+from pydantic import BaseModel, Field, BeforeValidator
+from typing import Union, Optional, Annotated
+
+PyObjectId = Annotated[str, BeforeValidator(str)]
 
 
 class Location(BaseModel):
@@ -12,12 +14,13 @@ class Location(BaseModel):
 
 
 class Part(BaseModel):
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
     serial_number: str = Field(unique=True)
     name: str
     description: str
     category: str
-    quantity: int
-    price: float
+    quantity: int = Field(gt=0)
+    price: float = Field(gt=0)
     location: Location
 
 

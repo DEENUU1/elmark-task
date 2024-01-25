@@ -2,12 +2,11 @@ from typing import Dict, Any
 
 from fastapi import HTTPException
 
-from models.categories import Category
 from schemas.categories import CategorySchema
 
 
 def create_category_object(
-        category: Category,
+        category: CategorySchema,
         collection: Any
 ) -> CategorySchema:
     """
@@ -139,4 +138,3 @@ def delete_category_object(
         return {"message": "Category deleted successfully"}
     else:
         raise HTTPException(status_code=404, detail="Category not found")
-

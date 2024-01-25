@@ -21,7 +21,7 @@ router = APIRouter(
 
 @router.post("/", response_model=CategorySchema, status_code=status.HTTP_201_CREATED)
 def create_category(
-        category: Category,
+        category: CategorySchema,
         collection: Any = Depends(get_categories_collection)
 ) -> CategorySchema:
     """
@@ -32,7 +32,7 @@ def create_category(
         collection (Any): Dependency to get the categories' collection.
 
     Returns:
-        CategorySchema: The created category.
+        CategoryCreateUpdateSchema: The created category.
 
     Raises:
         HTTPException: If there is an error in the creation process.
