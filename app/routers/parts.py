@@ -34,3 +34,6 @@ def update_part(serial_number: str, part: Part, collection: Any = Depends(get_pa
 @router.delete("/{serial_number}")
 def delete_part(serial_number: str, collection: Any = Depends(get_parts_collection)) -> Dict[str, Any]:
     return delete_part_object(serial_number, collection)
+
+
+# Todo search endpoint based on all fields

@@ -4,11 +4,21 @@ from fastapi import HTTPException
 
 from models.parts import Part
 from serializers.parts import get_part_serializer
+from categories import get_category_object
 
 
-def create_part_object(part: Part, collection: Any) -> Dict[str, Any]:
-    # Todo ensure that part is not assigned to 'base' category
-    # Todo part should be unique based on serial_number
+def create_part_object(part: Part, collection: Any, category_collection: Any) -> Dict[str, Any]:
+    existing_category = get_category_object(part.category, category_collection)
+    if not existing_category:
+        raise HTTPException(status_code=404, detail="Category not found")
+
+    if not existing_category["parent_name"]:
+        raise HTTPException(status_code=400, detail="Cannot assign part to 'base' category")
+
+    existing_part = collection.find_one({"serial_number": part.serial_number})
+    if existing_part:
+        raise HTTPException(status_code=400, detail="Part with this serial_number already exists")
+
     _id = collection.insert_one(part.dict()).inserted_id
     inserted_part = collection.find_one({"_id": _id})
     return get_part_serializer(inserted_part)
