@@ -66,7 +66,10 @@ def list_search_part_objects(query_params: Dict[str, Any], collection: Any) -> L
     filter_query = {}
     for key, value in query_params.items():
         if value is not None:
-            filter_query[key] = value
+            if isinstance(key, str):
+                filter_query[key] = {"$regex": value, "$options": "i"}
+            else:
+                filter_query[key] = value
 
     inserted_parts = list(collection.find(filter_query))
     if not inserted_parts:
