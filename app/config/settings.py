@@ -13,9 +13,7 @@ class Settings(BaseSettings):
 
     # Mongodb
     MONGO_DATABASE_NAME: str = os.getenv("MONGO_DATABASE_NAME")
-    MONGO_USERNAME: Optional[str] = os.getenv("MONGO_USERNAME")
-    MONGO_PASSWORD: Optional[str] = os.getenv("MONGO_PASSWORD")
-    MONGO_CONNECTION_STRING: str = f"mongodb+srv://{MONGO_USERNAME}:{MONGO_PASSWORD}@cluster0.quwsqxx.mongodb.net/?retryWrites=true&w=majority"
+    MONGO_CONNECTION_STRING: str = os.getenv("MONGO_CONNECTION_STRING")
 
 
 settings = Settings()

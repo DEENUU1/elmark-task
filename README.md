@@ -16,7 +16,7 @@ I also used the Continuous Deployment (CD) technique using AWS Actions to automa
 
 #### Why FastAPI
 I chose the FastAPI framework because of:
-- database requirements. In the case of the NoSQL database, I decided to use FastAPI due to its greater control, for comparison, Django has its own built-in ORM system which does not officially support NoSQL databases
+- Database requirements. In the case of the NoSQL database, I decided to use FastAPI due to its greater control, for comparison, Django has its own built-in ORM system which does not officially support NoSQL databases
 - The project is relatively small, with only 2 models/collections and a few basic endpoints for data operations
 
 #### API design
@@ -334,9 +334,8 @@ Example of .env
 ```txt 
 DEBUG="True"
 TITLE="ELMARK TASK"
-MONGO_DATABASE_NAME=KACPER_WLODARCZYK # Without polish letters
-MONGO_USERNAME=
-MONGO_PASSWORD=
+MONGO_DATABASE_NAME=KACPER_WLODARCZYK
+MONGO_CONNECTION_STRING=
 ```
 
 Build docker-compose
