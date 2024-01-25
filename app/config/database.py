@@ -9,7 +9,7 @@ def client() -> MongoClient:
 
 def get_db() -> Any:
     db = client()["KACPER_WŁODARCZYK"]
-    yield db
+    return db
 
 
 def get_categories_collection() -> Any:

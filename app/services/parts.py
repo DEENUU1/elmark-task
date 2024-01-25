@@ -62,16 +62,13 @@ def delete_part_object(
     return get_part_serializer(part)
 
 
-def list_search_part_objects(
-        query_params: Dict[str, Any],
-        db: MongoClient
-) -> List[Dict[str, Any]]:
+def list_search_part_objects(query_params: Dict[str, Any], collection: Any) -> List[Dict[str, Any]]:
     filter_query = {}
     for key, value in query_params.items():
         if value is not None:
             filter_query[key] = value
 
-    inserted_parts = list(db.parts.find(filter_query))
+    inserted_parts = list(collection.find(filter_query))
     if not inserted_parts:
         raise HTTPException(status_code=404, detail="Part not found")
 

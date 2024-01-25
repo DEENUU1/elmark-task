@@ -27,6 +27,8 @@ def get_category_object(
         db: MongoClient
 ) -> Dict[str, Optional[str]]:
     inserted_category = db.categories.find_one({"name": category_name})
+    if not inserted_category:
+        raise HTTPException(status_code=404, detail="Category not found")
     return get_category_serializer(inserted_category)
 
 

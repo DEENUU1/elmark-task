@@ -28,3 +28,4 @@ class SearchParams(BaseModel):
     category: Optional[str] = None
     quantity: Optional[int] = None
     price: Optional[float] = None
+

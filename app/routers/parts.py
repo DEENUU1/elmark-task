@@ -53,9 +53,6 @@ def delete_part(
 
 
 @router.get("/")
-def list_search_parts(
-        query_params: SearchParams = Depends(),
-        collection: MongoClient = Depends(get_parts_collection)
-) -> List[Dict[str, Any]]:
+def list_search_parts(query_params: SearchParams = Depends(), collection: Any = Depends(get_parts_collection)) -> List[Dict[str, Any]]:
     results = list_search_part_objects(query_params.dict(exclude_unset=True), collection)
     return results
