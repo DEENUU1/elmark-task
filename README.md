@@ -9,7 +9,7 @@
 ### Architecture
 #### Short description of architecture
 I created my own database and deployed the project to an AWS EC2 instance. 
-I also used the Continuous Deployment (CD) technique using AWS Actions to automatically deploy code to an AWS EC2 instance
+I also used the Continuous Deployment (CD) technique using Github Actions to automatically deploy code to an AWS EC2 instance
 Deployed version of this app is available at this address: http://13.49.58.212/docs
 
 <img src="assets/elmark-Strona-1.drawio.png" alt="architecture"/>
