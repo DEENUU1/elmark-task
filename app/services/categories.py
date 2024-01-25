@@ -1,14 +1,15 @@
 from typing import Dict, Any
 
+from bson import ObjectId
 from fastapi import HTTPException
 
-from schemas.categories import CategorySchema
+from schemas.categories import CategorySchema, CategoryCreateSchema, CategoryUpdateSchema
 
 
 def create_category_object(
-        category: CategorySchema,
+        category: CategoryCreateSchema,
         collection: Any
-) -> CategorySchema:
+) -> CategoryCreateSchema:
     """
     Create a new category object in the specified collection.
 
@@ -30,10 +31,33 @@ def create_category_object(
 
     _id = collection.insert_one(category.dict()).inserted_id
     inserted_category = collection.find_one({"_id": _id})
-    return CategorySchema(**inserted_category)
+    return CategoryCreateSchema(**inserted_category)
 
 
 def get_category_object(
+        category_id: str,
+        collection: Any
+) -> CategorySchema:
+    """
+    Retrieve a category object from the specified collection by its name.
+
+    Parameters:
+    - category_id (str): The id of the category to be retrieved.
+    - collection (Any): The MongoDB collection where the category is stored.
+
+    Returns:
+    - CategorySchema: The retrieved category as a CategorySchema object.
+    """
+    inserted_category = collection.find_one({"_id": ObjectId(category_id)})
+
+    # Raise an exception if the category is not found
+    if inserted_category is None:
+        raise HTTPException(status_code=404, detail="Category not found")
+
+    return CategorySchema(**inserted_category)
+
+
+def get_category_object_by_name(
         category_name: str,
         collection: Any
 ) -> CategorySchema:
@@ -41,7 +65,7 @@ def get_category_object(
     Retrieve a category object from the specified collection by its name.
 
     Parameters:
-    - category_name (str): The name of the category to be retrieved.
+    - category_name (str): The name  of the category to be retrieved.
     - collection (Any): The MongoDB collection where the category is stored.
 
     Returns:
@@ -57,22 +81,22 @@ def get_category_object(
 
 
 def update_category_object(
-        category_name: str,
-        category: CategorySchema,
+        category_id: str,
+        category: CategoryUpdateSchema,
         collection: Any
-) -> CategorySchema:
+) -> CategoryUpdateSchema:
     """
     Update a category object in the specified collection by its name.
 
     Parameters:
-    - category_name (str): The name of the category to be updated.
+    - category_id (str): The id of the category to be updated.
     - category (CategoryUpdateSchema): The updated data for the category.
     - collection (Any): The MongoDB collection where the category is stored.
 
     Returns:
     - CategoryUpdateSchema: The updated category as a CategoryUpdateSchema object.
     """
-    inserted_category = collection.find_one({"name": category_name})
+    inserted_category = collection.find_one({"_id": ObjectId(category_id)})
 
     # Check if the category with the specified name exists
     if inserted_category is None:
@@ -80,7 +104,7 @@ def update_category_object(
 
     # Check if updating to the specified name and parent_name would result in a duplicate category
     if (
-        category.name != category_name or
+        category.name != inserted_category.get("name") or
         category.parent_name != inserted_category.get("parent_name", None)
     ):
         duplicated_category = collection.find_one({
@@ -91,14 +115,14 @@ def update_category_object(
             raise HTTPException(status_code=400, detail="Category already exists")
 
     update_data = {"$set": {"name": category.name, "parent_name": category.parent_name}}
-    collection.update_one({"name": category_name}, update_data)
+    collection.update_one({"name": inserted_category.get("name")}, update_data)
 
     updated_category = collection.find_one({"name": category.name})
-    return CategorySchema(**updated_category)
+    return CategoryUpdateSchema(**updated_category)
 
 
 def delete_category_object(
-        category_name: str,
+        category_id: str,
         collection: Any,
         collection_parts: Any
 ) -> Dict[str, str]:
@@ -106,7 +130,7 @@ def delete_category_object(
     Delete a category object from the specified collection and associated parts.
 
     Parameters:
-    - category_name (str): The name of the category to be deleted.
+    - category_id (str): The id of the category to be deleted.
     - collection (Any): The MongoDB collection where the category is stored.
     - collection_parts (Any): The MongoDB collection where parts related to categories are stored.
 
@@ -114,17 +138,17 @@ def delete_category_object(
     - Dict[str, str]: A dictionary indicating the success of the deletion.
     """
     # Check if the category with the specified name exists
-    category = collection.find_one({"name": category_name})
+    category = collection.find_one({"_id": ObjectId(category_id)})
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
 
     # Check if the category has assigned parts
-    parts_in_category = list(collection_parts.find({"category": category_name}))
+    parts_in_category = list(collection_parts.find({"category": category.get("name")}))
     if len(parts_in_category) > 0:
         raise HTTPException(status_code=400, detail="Cannot delete a category with assigned parts")
 
     # Check if a parent category has child categories with assigned parts
-    child_categories = collection.find({"parent_name": category_name})
+    child_categories = collection.find({"parent_name": category.get("name")})
     for child_category in child_categories:
         child_category_parts = list(collection_parts.find({"category": child_category["name"]}))
         if len(child_category_parts) > 0:
@@ -133,7 +157,7 @@ def delete_category_object(
                 detail="Cannot delete a parent category with child categories having assigned parts"
             )
 
-    result = collection.delete_one({"name": category_name})
+    result = collection.delete_one({"name": category.get("name")})
     if result.deleted_count == 1:
         return {"message": "Category deleted successfully"}
     else:

@@ -9,7 +9,7 @@ from services.categories import (
 )
 from config.database import get_parts_collection, get_categories_collection
 from typing import Any, Dict
-from schemas.categories import CategorySchema
+from schemas.categories import CategorySchema, CategoryCreateSchema, CategoryUpdateSchema
 from fastapi import status
 
 
@@ -19,11 +19,11 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=CategorySchema, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=CategoryCreateSchema, status_code=status.HTTP_201_CREATED)
 def create_category(
-        category: CategorySchema,
+        category: CategoryCreateSchema,
         collection: Any = Depends(get_categories_collection)
-) -> CategorySchema:
+) -> CategoryCreateSchema:
     """
     Create a new category.
 
@@ -32,7 +32,7 @@ def create_category(
         collection (Any): Dependency to get the categories' collection.
 
     Returns:
-        CategoryCreateUpdateSchema: The created category.
+        CategoryCreateSchema: The created category.
 
     Raises:
         HTTPException: If there is an error in the creation process.
@@ -40,16 +40,16 @@ def create_category(
     return create_category_object(category, collection)
 
 
-@router.get("/{name}", response_model=CategorySchema, status_code=status.HTTP_200_OK)
+@router.get("/{id}", response_model=CategorySchema, status_code=status.HTTP_200_OK)
 def get_category(
-        name: str,
+        id: str,
         collection: Any = Depends(get_categories_collection)
 ) -> CategorySchema:
     """
     Get a category by name.
 
     Args:
-        name (str): The name of the category to retrieve.
+        id (str): The id of the category to retrieve.
         collection (Any): Dependency to get the categories' collection.
 
     Returns:
@@ -58,20 +58,20 @@ def get_category(
     Raises:
         HTTPException: If the category is not found.
     """
-    return get_category_object(name, collection)
+    return get_category_object(id, collection)
 
 
-@router.put("/{name}", response_model=CategorySchema, status_code=status.HTTP_200_OK)
+@router.put("/{id}", response_model=CategoryUpdateSchema, status_code=status.HTTP_200_OK)
 def update_category(
-        name: str,
-        category: CategorySchema,
+        id: str,
+        category: CategoryUpdateSchema,
         collection: Any = Depends(get_categories_collection)
-) -> CategorySchema:
+) -> CategoryUpdateSchema:
     """
     Update a category by name.
 
     Args:
-        name (str): The name of the category to update.
+        id (str): The id of the category to update.
         category (CategoryUpdateSchema): The updated category data.
         collection (Any): Dependency to get the categories' collection.
 
@@ -81,12 +81,12 @@ def update_category(
     Raises:
         HTTPException: If the category is not found or there is an error in the update process.
     """
-    return update_category_object(name, category, collection)
+    return update_category_object(id, category, collection)
 
 
-@router.delete("/{name}", status_code=status.HTTP_200_OK, response_model=Dict[str, str])
+@router.delete("/{id}", status_code=status.HTTP_200_OK, response_model=Dict[str, str])
 def delete_category(
-        name: str,
+        id: str,
         collection: Any = Depends(get_categories_collection),
         collection_part: Any = Depends(get_parts_collection)
 ) -> Dict[str, str]:
@@ -94,7 +94,7 @@ def delete_category(
     Delete a category by name.
 
     Args:
-        name (str): The name of the category to delete.
+        id (str): The id of the category to delete.
         collection (Any): Dependency to get the categories' collection.
         collection_part (Any): Dependency to get the parts' collection.
 
@@ -104,4 +104,4 @@ def delete_category(
     Raises:
         HTTPException: If the category is not found or there is an error in the deletion process.
     """
-    return delete_category_object(name, collection, collection_part)
+    return delete_category_object(id, collection, collection_part)

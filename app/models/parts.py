@@ -19,8 +19,8 @@ class Part(BaseModel):
     name: str
     description: str
     category: str
-    quantity: int = Field(gt=0)
-    price: float = Field(gt=0)
+    quantity: int = Field(ge=0)
+    price: float = Field(ge=0)
     location: Location
 
 

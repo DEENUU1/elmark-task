@@ -13,6 +13,7 @@ I also used the Continuous Deployment (CD) technique using AWS Actions to automa
 
 <img src="assets/elmark-Strona-1.drawio.png" alt="architecture"/>
 <img src="assets/elmark-Strona-2.drawio.png" alt="architecture"/>
+<img src="assets/endpoints.png" alt="architecture"/>
 
 #### Why FastAPI
 I chose the FastAPI framework because of:
@@ -20,6 +21,9 @@ I chose the FastAPI framework because of:
 - The project is relatively small, with only 2 models/collections and a few basic endpoints for data operations
 
 #### API design
+- Id for Categories and serial_number for Parts
+
+
 - Used singular and don't mix them with plurals 
 ```
 /part
@@ -49,6 +53,7 @@ curl --location 'localhost:8000/api/v1/category/' \
 Response:
 ```
 {
+    "_id": "65b2e261d1fd45025628a880",
     "name": "Wiadra",
     "parent_name": "Metal"
 }
@@ -57,18 +62,19 @@ Response:
 </details>
 
 
-##### [GET] /api/v1/category/{name}
+##### [GET] /api/v1/category/{id}
 <details>
   <summary><strong>cURL Example</strong></summary>
 cURL:
 
 ```
-curl --location 'localhost:8000/api/v1/category/Wiadra'
+curl --location 'localhost:8000/api/v1/category/65b2e261d1fd45025628a880'
 ```
 
 Response:
 ```
 {
+    "_id": "65b2e261d1fd45025628a880"
     "name": "Wiadra",
     "parent_name": "Metal"
 }
@@ -76,13 +82,13 @@ Response:
 
 </details>
 
-##### [PUT] /api/v1/category/{name}
+##### [PUT] /api/v1/category/{id}
 <details>
   <summary><strong>cURL Example</strong></summary>
 
 cURL:
 ```
-curl --location --request PUT 'localhost:8000/api/v1/category/Tools' \
+curl --location --request PUT 'localhost:8000/api/v1/category/65b2e261d1fd45025628a880' \
 --header 'Content-Type: application/json' \
 --data '{
     "name": "Wiaderka"
@@ -92,6 +98,7 @@ curl --location --request PUT 'localhost:8000/api/v1/category/Tools' \
 Response:
 ```
 {
+    "_id": "65b2e261d1fd45025628a880",
     "name": "Wiaderka",
     "parent_name": null
 }
@@ -99,13 +106,13 @@ Response:
 </details>
 
 
-##### [DELETE] /api/v1/category/{name}
+##### [DELETE] /api/v1/category/{id}
 <details>
   <summary><strong>cURL Example</strong></summary>
 
 cURL:
 ```
-curl --location --request DELETE 'localhost:8000/api/v1/category/Wiadra'
+curl --location --request DELETE 'localhost:8000/api/v1/category/65b2e261d1fd45025628a880'
 ```
 
 Response:
@@ -146,6 +153,7 @@ curl --location 'localhost:8000/api/v1/part/' \
 Response:
 ```
 {
+    "_id": "65b2d3947b2f630d89bad853",
     "serial_number": "aadasjadsadsadsb",
     "name": "Allen key",
     "description": "Some description for this part",
@@ -178,6 +186,7 @@ Response:
 ```
 [
     {
+        "_id": "65b2d3947b2f630d89bad853",
         "serial_number": "aadasjadsadsadsb",
         "name": "Allen key",
         "description": "Some description for this part",
@@ -194,6 +203,7 @@ Response:
         }
     },
     {
+        "_id": "65b2d3947b2f630d89bad853",
         "serial_number": "aadasjadssssadsadsb",
         "name": "Allen key 2",
         "description": "Some description for this part",
@@ -214,18 +224,19 @@ Response:
 </details>
 
 
-##### [GET] /api/v1/part/{serial_number}
+##### [GET] /api/v1/part/{id}
 <details>
   <summary><strong>cURL Example</strong></summary>
 
 cURL:
 ```
-curl --location 'localhost:8000/api/v1/part/aadasjadsadsadsb'
+curl --location 'localhost:8000/api/v1/part/65b2d3947b2f630d89bad853'
 ```
 
 Response:
 ```
 {
+    "_id": "65b2d3947b2f630d89bad853",
     "serial_number": "aadasjadsadsadsb",
     "name": "Allen key",
     "description": "Some description for this part",
@@ -244,13 +255,13 @@ Response:
 ```
 </details>
 
-##### [PUT] /api/v1/part/{serial_number}
+##### [PUT] /api/v1/part/{id}
 <details>
   <summary><strong>cURL Example</strong></summary>
 
 cURL:
 ```
-curl --location --request PUT 'localhost:8000/api/v1/part/aadasjadssssadsadsb' \
+curl --location --request PUT 'localhost:8000/api/v1/part/65b2d3947b2f630d89bad853' \
 --header 'Content-Type: application/json' \
 --data '{
     "serial_number": "aadasjadssssadsadsb",
@@ -273,6 +284,7 @@ curl --location --request PUT 'localhost:8000/api/v1/part/aadasjadssssadsadsb' \
 Response:
 ```
 {
+    "_id": "65b2d3947b2f630d89bad853",
     "serial_number": "aadasjadssssadsadsb",
     "name": "Allen key 123",
     "description": "Some description for this part",
@@ -291,13 +303,13 @@ Response:
 ```
 </details>
 
-##### [DELETE] /api/v1/part/{serial_number}
+##### [DELETE] /api/v1/part/{id}
 <details>
   <summary><strong>cURL Example</strong></summary>
 
 cURL:
 ```
-curl --location --request DELETE 'localhost:8000/api/v1/part/newSerial123'
+curl --location --request DELETE 'localhost:8000/api/v1/part/65b2d3947b2f630d89bad853'
 ```
 
 Response:

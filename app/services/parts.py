@@ -2,29 +2,30 @@ from typing import Dict, Any, List
 
 from fastapi import HTTPException
 
-from models.parts import Part
-from .categories import get_category_object
-from schemas.parts import PartSchema
+from .categories import get_category_object_by_name
+from schemas.parts import PartSchema, PartCreateSchema, PartUpdateSchema
+from bson import ObjectId
 
 
 def create_part_object(
-        part: Part,
+        part: PartCreateSchema,
         collection: Any,
         category_collection: Any
-) -> PartSchema:
+) -> PartCreateSchema:
     """
     Create a new part object in the specified collection.
 
     Parameters:
-    - part (Part): The part object to be created.
+    - part (PartCreateSchema): The part object to be created.
     - collection (Any): The MongoDB collection where the part will be stored.
     - category_collection (Any): The MongoDB collection where categories are stored.
 
     Returns:
-    - PartSchema: The newly created part as a PartSchema object.
+    - PartCreateSchema: The newly created part as a PartSchema object.
     """
     # Check if the specified category exists
-    existing_category = get_category_object(part.category, category_collection)
+
+    existing_category = get_category_object_by_name(part.category, category_collection)
     if not existing_category:
         raise HTTPException(status_code=404, detail="Category not found")
 
@@ -39,11 +40,11 @@ def create_part_object(
 
     _id = collection.insert_one(part.dict()).inserted_id
     inserted_part = collection.find_one({"_id": _id})
-    return PartSchema(**inserted_part)
+    return PartCreateSchema(**inserted_part)
 
 
 def get_part_object(
-        serial_number: str,
+        part_id: str,
         collection: Any
 ) -> PartSchema:
     """
@@ -56,7 +57,7 @@ def get_part_object(
     Returns:
     - PartSchema: The retrieved part as a PartSchema object.
     """
-    inserted_part = collection.find_one({"serial_number": serial_number})
+    inserted_part = collection.find_one({"_id": ObjectId(part_id)})
 
     # Raise an exception if the part is not found
     if not inserted_part:
@@ -66,31 +67,31 @@ def get_part_object(
 
 
 def update_part_object(
-        serial_number: str,
-        part: Part,
+        part_id: str,
+        part: PartUpdateSchema,
         collection: Any,
         category_collection: Any
-) -> PartSchema:
+) -> PartUpdateSchema:
     """
     Update a part object in the specified collection by its serial number.
 
     Parameters:
     - serial_number (str): The serial number of the part to be updated.
-    - part (Part): The updated data for the part.
+    - part (PartCreateSchema): The updated data for the part.
     - collection (Any): The MongoDB collection where the part is stored.
     - category_collection (Any): The MongoDB collection where categories are stored.
 
     Returns:
-    - PartSchema: The updated part as a PartSchema object.
+    - PartCreateSchema: The updated part as a PartSchema object.
     """
-    existing_part = collection.find_one({"serial_number": serial_number})
+    existing_part = collection.find_one({"_id": ObjectId(part_id)})
 
     # Check if the part with the specified serial number exists
     if not existing_part:
         raise HTTPException(status_code=404, detail="Part not found")
 
     # Check if the specified category exists
-    existing_category = get_category_object(part.category, category_collection)
+    existing_category = get_category_object_by_name(part.category, category_collection)
     if not existing_category:
         raise HTTPException(status_code=404, detail="Category not found")
 
@@ -106,13 +107,14 @@ def update_part_object(
         }
     }
 
-    collection.update_one({"serial_number": serial_number}, update_data)
+    collection.update_one({"_id": existing_part.get("_id")}, update_data)
 
     updated_part = collection.find_one({"serial_number": part.serial_number})
-    return PartSchema(**updated_part)
+    return PartUpdateSchema(**updated_part)
+
 
 def delete_part_object(
-        serial_number: str,
+        part_id: str,
         collection: Any
 ) -> Dict[str, str]:
     """
@@ -125,13 +127,13 @@ def delete_part_object(
     Returns:
     - Dict[str, str]: A dictionary indicating the success of the deletion.
     """
-    part = collection.find_one({"serial_number": serial_number})
+    part = collection.find_one({"_id": ObjectId(part_id)})
 
     # Raise an exception if the part is not found
     if not part:
         raise HTTPException(status_code=404, detail="Part not found")
 
-    collection.delete_one({"serial_number": serial_number})
+    collection.delete_one({"_id": part.get("_id")})
     return {"message": "Part deleted successfully"}
 
 
