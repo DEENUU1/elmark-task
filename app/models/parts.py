@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Union, Optional
 
 
@@ -12,7 +12,7 @@ class Location(BaseModel):
 
 
 class Part(BaseModel):
-    serial_number: str
+    serial_number: str = Field(unique=True)
     name: str
     description: str
     category: str

@@ -1,8 +1,8 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Category(BaseModel):
-    name: str
+    name: str = Field(unique=True)
     parent_name: Optional[str] = None
