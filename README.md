@@ -32,6 +32,13 @@ I chose the FastAPI framework because of:
 /api/v1
 ```
 
+#### Validation and other details
+- I used Pydantic to validate data in Part model:
+  - quantity and price must be greater or equal 0
+- Search:
+  - User is able to search Parts by fields: serial_number, name, description, category
+  - I used regex to search Parts objects in Mongodb. It allows to match substrings that are provided by the user with those in the object field
+
 ### Endpoints
 
 <img src="assets/endpoints.png" alt="architecture"/>
