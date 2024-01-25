@@ -1,4 +1,14 @@
 from pydantic import BaseModel
+from typing import Union, Optional
+
+
+class Location(BaseModel):
+    room: Optional[Union[str, int]] = None
+    bookcase: Optional[Union[str, int]] = None
+    shelf: Optional[Union[str, int]] = None
+    cuvette: Optional[Union[str, int]] = None
+    column: Optional[Union[str, int]] = None
+    row: Optional[Union[str, int]] = None
 
 
 class Part(BaseModel):
@@ -8,7 +18,4 @@ class Part(BaseModel):
     category: str
     quantity: int
     price: float
-    location: dict
-
-# Todo validate location field (room, bookcase, shelf, cuveƩe, column, row)
-# Input validaƟon for both datasets, with special aƩenƟon to the new 'locaƟon' field and category relationship
+    location: Location

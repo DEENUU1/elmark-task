@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 from models.parts import Part
 from serializers.parts import get_part_serializer
-from categories import get_category_object
+from .categories import get_category_object
 
 
 def create_part_object(part: Part, collection: Any, category_collection: Any) -> Dict[str, Any]:
