@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from config.settings import settings
 from routers.api import router
+from typing import Dict
 
 
 app = FastAPI(
@@ -13,5 +14,5 @@ app.include_router(router)
 
 
 @app.get("/")
-def root():
+def root() -> Dict[str, str]:
     return {"status": "ok"}

@@ -1,78 +1,78 @@
 from typing import Dict, Any, List
 
 from fastapi import HTTPException
-from pymongo import MongoClient
 
 from models.parts import Part
-from serializers.parts import get_part_serializer, get_parts_serializer
 from .categories import get_category_object
+from schemas.parts import PartSchema
 
 
 def create_part_object(
         part: Part,
-        db: MongoClient
-) -> Dict[str, Any]:
-    existing_category = get_category_object(part.category, db.categories)
+        collection: Any,
+        category_collection: Any
+) -> PartSchema:
+    existing_category = get_category_object(part.category, category_collection)
     if not existing_category:
         raise HTTPException(status_code=404, detail="Category not found")
 
     if not existing_category["parent_name"]:
         raise HTTPException(status_code=400, detail="Cannot assign part to 'base' category")
 
-    existing_part = db.parts.find_one({"serial_number": part.serial_number})
+    existing_part = collection.find_one({"serial_number": part.serial_number})
     if existing_part:
         raise HTTPException(status_code=400, detail="Part with this serial_number already exists")
 
-    _id = db.parts.insert_one(part.dict()).inserted_id
-    inserted_part = db.parts.find_one({"_id": _id})
-    return get_part_serializer(inserted_part)
+    _id = collection.insert_one(part.dict()).inserted_id
+    inserted_part = collection.find_one({"_id": _id})
+    return inserted_part
 
 
 def get_part_object(
         serial_number: str,
-        db: MongoClient
-) -> Dict[str, Any]:
-    inserted_part = db.parts.find_one({"serial_number": serial_number})
+        collection: Any
+) -> PartSchema:
+    inserted_part = collection.find_one({"serial_number": serial_number})
     if not inserted_part:
         raise HTTPException(status_code=404, detail="Part not found")
 
-    return get_part_serializer(inserted_part)
+    return inserted_part
 
 
 def update_part_object(
         serial_number: str,
         part: Part,
-        db: MongoClient
-) -> Dict[str, Any]:
+        collection: Any
+) -> PartSchema:
     # Todo create model for update method
-    db.parts.update_one({"serial_number": serial_number}, {"$set": part.dict()})
-    inserted_part = db.parts.find_one({"serial_number": serial_number})
-    return get_part_serializer(inserted_part)
+    collection.update_one({"serial_number": serial_number}, {"$set": part.dict()})
+    inserted_part = collection.find_one({"serial_number": serial_number})
+    return inserted_part
 
 
 def delete_part_object(
         serial_number: str,
-        db: MongoClient
-) -> Dict[str, Any]:
-    part = db.parts.find_one({"serial_number": serial_number})
+        collection: Any
+) -> Dict[str, str]:
+    part = collection.find_one({"serial_number": serial_number})
     if not part:
         raise HTTPException(status_code=404, detail="Part not found")
 
-    db.parts.delete_one({"serial_number": serial_number})
-    return get_part_serializer(part)
+    collection.delete_one({"serial_number": serial_number})
+    return {"message": "Part deleted successfully"}
 
 
-def list_search_part_objects(query_params: Dict[str, Any], collection: Any) -> List[Dict[str, Any]]:
+def list_search_part_objects(
+        query_params: Dict[str, Any],
+        collection: Any
+) -> List[PartSchema]:
     filter_query = {}
     for key, value in query_params.items():
         if value is not None:
-            if isinstance(key, str):
-                filter_query[key] = {"$regex": value, "$options": "i"}
-            else:
-                filter_query[key] = value
+            filter_query[key] = {"$regex": str(value), "$options": "i"}
 
     inserted_parts = list(collection.find(filter_query))
     if not inserted_parts:
         raise HTTPException(status_code=404, detail="Part not found")
 
-    return get_parts_serializer(inserted_parts)
+    return inserted_parts

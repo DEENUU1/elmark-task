@@ -1,48 +1,49 @@
-from typing import Dict, Optional, Any
+from typing import Dict, Any
 
 from fastapi import HTTPException
 
 from models.categories import Category
-from serializers.categories import get_category_serializer
-from pymongo import MongoClient
+from schemas.categories import CategorySchema
 
 
 def create_category_object(
         category: Category,
-        db: MongoClient
-) -> Dict[str, Optional[str]]:
-    if db.categories.find_one({"name": category.name}):
+        collection: Any
+) -> CategorySchema:
+    if collection.find_one({"name": category.name}):
         raise HTTPException(status_code=400, detail="Category already exists")
 
-    if category.parent_name and not db.categories.find_one({"name": category.parent_name}):
+    if category.parent_name and not collection.find_one({"name": category.parent_name}):
         raise HTTPException(status_code=400, detail="Parent category does not exist")
-    
-    _id = db.categories.insert_one(category.dict()).inserted_id
-    inserted_category = db.categories.find_one({"_id": _id})
-    return get_category_serializer(inserted_category)
+
+    _id = collection.insert_one(category.dict()).inserted_id
+    inserted_category = collection.find_one({"_id": _id})
+    return inserted_category
 
 
 def get_category_object(
         category_name: str,
-        db: MongoClient
-) -> Dict[str, Optional[str]]:
-    inserted_category = db.categories.find_one({"name": category_name})
-    if not inserted_category:
-        raise HTTPException(status_code=404, detail="Category not found")
-    return get_category_serializer(inserted_category)
+        collection: Any
+) -> CategorySchema:
+    inserted_category = collection.find_one({"name": category_name})
+    return inserted_category
 
 
 def update_category_object(
         category_name: str,
         category: Category,
-        db: MongoClient
-) -> Dict[str, Optional[str]]:
-    db.categories.update_one({"category_name": category_name}, {"$set": category.dict()})
-    inserted_category = db.categories.find_one({"category_name": category_name})
-    return get_category_serializer(inserted_category)
+        collection: Any
+) -> CategorySchema:
+    collection.update_one({"category_name": category_name}, {"$set": category.dict()})
+    inserted_category = collection.find_one({"category_name": category_name})
+    return inserted_category
 
 
-def delete_category_object(category_name: str, collection: Any, collection_parts: Any) -> Dict[str, Optional[str]]:
+def delete_category_object(
+        category_name: str,
+        collection: Any,
+        collection_parts: Any
+) -> Dict[str, str]:
     category = collection.find_one({"name": category_name})
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
