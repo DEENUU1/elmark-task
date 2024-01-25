@@ -7,7 +7,10 @@ from serializers.categories import get_category_serializer
 from pymongo import MongoClient
 
 
-def create_category_object(category: Category, db: MongoClient) -> Dict[str, Optional[str]]:
+def create_category_object(
+        category: Category,
+        db: MongoClient
+) -> Dict[str, Optional[str]]:
     if db.categories.find_one({"name": category.name}):
         raise HTTPException(status_code=400, detail="Category already exists")
 
@@ -19,16 +22,27 @@ def create_category_object(category: Category, db: MongoClient) -> Dict[str, Opt
     return get_category_serializer(inserted_category)
 
 
-def get_category_object(category_name: str, db: MongoClient) -> Dict[str, Optional[str]]:
+def get_category_object(
+        category_name: str,
+        db: MongoClient
+) -> Dict[str, Optional[str]]:
     inserted_category = db.categories.find_one({"name": category_name})
     return get_category_serializer(inserted_category)
 
 
-def update_category_object(category_name: str, category: Category, db: MongoClient) -> Dict[str, Optional[str]]:
+def update_category_object(
+        category_name: str,
+        category: Category,
+        db: MongoClient
+) -> Dict[str, Optional[str]]:
     db.categories.update_one({"category_name": category_name}, {"$set": category.dict()})
     inserted_category = db.categories.find_one({"category_name": category_name})
     return get_category_serializer(inserted_category)
 
 
-def delete_category_object(category_name: str, collection: Any, collection_parts: Any) -> Dict[str, Optional[str]]:
+def delete_category_object(
+        category_name: str,
+        collection: Any,
+        collection_parts: Any
+) -> Dict[str, Optional[str]]:
     pass

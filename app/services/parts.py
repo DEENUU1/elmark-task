@@ -8,7 +8,10 @@ from serializers.parts import get_part_serializer, get_parts_serializer
 from .categories import get_category_object
 
 
-def create_part_object(part: Part, db: MongoClient) -> Dict[str, Any]:
+def create_part_object(
+        part: Part,
+        db: MongoClient
+) -> Dict[str, Any]:
     existing_category = get_category_object(part.category, db.categories)
     if not existing_category:
         raise HTTPException(status_code=404, detail="Category not found")
@@ -25,7 +28,10 @@ def create_part_object(part: Part, db: MongoClient) -> Dict[str, Any]:
     return get_part_serializer(inserted_part)
 
 
-def get_part_object(serial_number: str, db: MongoClient) -> Dict[str, Any]:
+def get_part_object(
+        serial_number: str,
+        db: MongoClient
+) -> Dict[str, Any]:
     inserted_part = db.parts.find_one({"serial_number": serial_number})
     if not inserted_part:
         raise HTTPException(status_code=404, detail="Part not found")
@@ -33,14 +39,21 @@ def get_part_object(serial_number: str, db: MongoClient) -> Dict[str, Any]:
     return get_part_serializer(inserted_part)
 
 
-def update_part_object(serial_number: str, part: Part, db: MongoClient) -> Dict[str, Any]:
+def update_part_object(
+        serial_number: str,
+        part: Part,
+        db: MongoClient
+) -> Dict[str, Any]:
     # Todo create model for update method
     db.parts.update_one({"serial_number": serial_number}, {"$set": part.dict()})
     inserted_part = db.parts.find_one({"serial_number": serial_number})
     return get_part_serializer(inserted_part)
 
 
-def delete_part_object(serial_number: str, db: MongoClient) -> Dict[str, Any]:
+def delete_part_object(
+        serial_number: str,
+        db: MongoClient
+) -> Dict[str, Any]:
     part = db.parts.find_one({"serial_number": serial_number})
     if not part:
         raise HTTPException(status_code=404, detail="Part not found")
@@ -49,7 +62,10 @@ def delete_part_object(serial_number: str, db: MongoClient) -> Dict[str, Any]:
     return get_part_serializer(part)
 
 
-def list_search_part_objects(query_params: Dict[str, Any], db: MongoClient) -> List[Dict[str, Any]]:
+def list_search_part_objects(
+        query_params: Dict[str, Any],
+        db: MongoClient
+) -> List[Dict[str, Any]]:
     filter_query = {}
     for key, value in query_params.items():
         if value is not None:
