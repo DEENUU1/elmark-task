@@ -10,6 +10,7 @@ from services.parts import (
     list_search_part_objects
 )
 from schemas.parts import PartSchema
+from fastapi import status
 
 
 router = APIRouter(
@@ -18,7 +19,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=PartSchema)
+@router.post("/", response_model=PartSchema, status_code=status.HTTP_201_CREATED)
 def create_part(
         part: Part,
         collection: Any = Depends(get_parts_collection),
@@ -27,7 +28,7 @@ def create_part(
     return create_part_object(part, collection, collection_category)
 
 
-@router.get("/{serial_number}", response_model=PartSchema)
+@router.get("/{serial_number}", response_model=PartSchema, status_code=status.HTTP_200_OK)
 def get_part(
         serial_number: str,
         collection: Any = Depends(get_parts_collection)
@@ -35,7 +36,7 @@ def get_part(
     return get_part_object(serial_number, collection)
 
 
-@router.put("/{serial_number}", response_model=PartSchema)
+@router.put("/{serial_number}", response_model=PartSchema, status_code=status.HTTP_200_OK)
 def update_part(
         serial_number: str,
         part: Part,
@@ -44,7 +45,7 @@ def update_part(
     return update_part_object(serial_number, part, collection)
 
 
-@router.delete("/{serial_number}")
+@router.delete("/{serial_number}", status_code=status.HTTP_200_OK, response_model=Dict[str, str])
 def delete_part(
         serial_number: str,
         collection: Any = Depends(get_parts_collection)
@@ -52,7 +53,7 @@ def delete_part(
     return delete_part_object(serial_number, collection)
 
 
-@router.get("/", response_model=List[PartSchema])
+@router.get("/", response_model=List[PartSchema], status_code=status.HTTP_200_OK)
 def list_search_parts(
         query_params: SearchParams = Depends(),
         collection: Any = Depends(get_parts_collection)

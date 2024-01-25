@@ -25,7 +25,7 @@ def create_part_object(
 
     _id = collection.insert_one(part.dict()).inserted_id
     inserted_part = collection.find_one({"_id": _id})
-    return inserted_part
+    return PartSchema(**inserted_part)
 
 
 def get_part_object(
@@ -36,7 +36,7 @@ def get_part_object(
     if not inserted_part:
         raise HTTPException(status_code=404, detail="Part not found")
 
-    return inserted_part
+    return PartSchema(**inserted_part)
 
 
 def update_part_object(
@@ -47,7 +47,7 @@ def update_part_object(
     # Todo create model for update method
     collection.update_one({"serial_number": serial_number}, {"$set": part.dict()})
     inserted_part = collection.find_one({"serial_number": serial_number})
-    return inserted_part
+    return PartSchema(**inserted_part)
 
 
 def delete_part_object(

@@ -55,7 +55,22 @@ Response:
 }
 ```
 ##### [PUT] /api/v1/category/{name}
+cURL:
+```
+curl --location --request PUT 'localhost:8000/api/v1/category/Tools' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Wiaderka"
+}'
+```
 
+Response:
+```
+{
+    "name": "Wiaderka",
+    "parent_name": null
+}
+```
 ##### [DELETE] /api/v1/category/{name}
 cURL:
 ```

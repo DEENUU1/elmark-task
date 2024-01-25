@@ -18,7 +18,7 @@ def create_category_object(
 
     _id = collection.insert_one(category.dict()).inserted_id
     inserted_category = collection.find_one({"_id": _id})
-    return inserted_category
+    return CategorySchema(**inserted_category)
 
 
 def get_category_object(
@@ -26,7 +26,9 @@ def get_category_object(
         collection: Any
 ) -> CategorySchema:
     inserted_category = collection.find_one({"name": category_name})
-    return inserted_category
+    if inserted_category is None:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return CategorySchema(**inserted_category)
 
 
 def update_category_object(
