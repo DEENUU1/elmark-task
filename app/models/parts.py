@@ -19,3 +19,4 @@ class Part(BaseModel):
     quantity: int
     price: float
     location: Location
+

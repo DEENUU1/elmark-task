@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional, List
 
 from fastapi import HTTPException
 
@@ -39,10 +39,24 @@ def update_part_object(serial_number: str, part: Part, collection: Any) -> Dict[
     return get_part_serializer(inserted_part)
 
 
-def delete_part_object(serial_number: str , collection: Any) -> Dict[str, Any]:
+def delete_part_object(serial_number: str, collection: Any) -> Dict[str, Any]:
     part = collection.find_one({"serial_number": serial_number})
     if not part:
         raise HTTPException(status_code=404, detail="Part not found")
 
     collection.delete_one({"serial_number": serial_number})
     return get_part_serializer(part)
+
+
+def search_part(query_params: Dict[str, Any], collection: Any) -> List[Optional[Dict[str, Any]]]:
+    filter_query = {}
+    for key, value in query_params.items():
+        if key == "location":
+            for loc_key, loc_value in value.items():
+                filter_query[f"location.{loc_key}"] = loc_value
+        else:
+            filter_query[key] = value
+
+    result = list(collection.find(filter_query))
+
+    return result
