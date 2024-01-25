@@ -14,25 +14,28 @@ Deployed version of this app is available at this address: http://13.49.58.212/d
 
 <img src="assets/elmark-Strona-1.drawio.png" alt="architecture"/>
 <img src="assets/elmark-Strona-2.drawio.png" alt="architecture"/>
-<img src="assets/endpoints.png" alt="architecture"/>
 
 #### Why FastAPI
 I chose the FastAPI framework because of:
-- Database requirements. In the case of the NoSQL database, I decided to use FastAPI due to its greater control, for comparison, Django has its own built-in ORM system which does not officially support NoSQL databases
-- The project is relatively small, with only 2 models/collections and a few basic endpoints for data operations
+- Database Requirements: Given the use of a NoSQL database, FastAPI was chosen for its enhanced control. In comparison, Django's built-in ORM system lacks official support for NoSQL databases
+- Project Size: With only two models/collections and a few basic endpoints for data operations, FastAPI offers a lightweight and efficient solution.
 
 #### API design
-- Used singular and don't mix them with plurals 
+- In the endpoints I used the singular and did not mix it with the plural
+
 ```
 /part
 /category
 ```
-- Used API versioning
+- I used API versioning
 ```
 /api/v1
 ```
 
 ### Endpoints
+
+<img src="assets/endpoints.png" alt="architecture"/>
+
 
 ##### [POST] /api/v1/category/
 <details>
