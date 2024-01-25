@@ -33,5 +33,4 @@ def update_category(name: str, category: Category, collection: Any = Depends(get
 
 @router.delete("/{name}")
 def delete_category(name: str, collection: Any = Depends(get_categories_collection), collection_part: Any = Depends(get_parts_collection)) -> Dict[str, Any]:
-    collection_part.delete_many({"category": name})
     return delete_category_object(name, collection, collection_part)

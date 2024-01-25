@@ -47,8 +47,8 @@ def delete_category_object(category_name: str, collection: Any, collection_parts
                 detail="Cannot delete a parent category with child categories having assigned parts"
             )
 
-    result = collection.delete_one({"name": category_name})
-    if result.deleted_count == 1:
-        return {"message": "Category deleted successfully"}
-    else:
-        raise HTTPException(status_code=404, detail="Category not found")
+    # result = collection.delete_one({"name": category_name})
+    # if result.deleted_count == 1:
+    return {"message": "Category deleted successfully"}
+    # else:
+    #     raise HTTPException(status_code=404, detail="Category not found")
