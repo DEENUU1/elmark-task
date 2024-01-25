@@ -10,7 +10,7 @@ def client() -> MongoClient:
 
 
 def get_db() -> Database[Mapping[str, Any] | Any]:
-    db = client()["KACPER_WŁODARCZYK"]
+    db = client()[settings.MONGO_DATABASE_NAME]
     return db
 
 

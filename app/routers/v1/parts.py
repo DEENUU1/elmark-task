@@ -35,7 +35,7 @@ def get_part(
     return get_part_object(serial_number, collection)
 
 
-@router.post("/{serial_number}", response_model=PartSchema)
+@router.put("/{serial_number}", response_model=PartSchema)
 def update_part(
         serial_number: str,
         part: Part,

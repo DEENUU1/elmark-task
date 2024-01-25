@@ -12,7 +12,6 @@ class Settings(BaseSettings):
     TITLE: str = os.getenv("TITLE")
 
     # Mongodb
-    ELMARK_MONGO_CONNECTION_STRING: str = os.getenv("ELMARK_MONGO_CONNECTION_STRING")
     MONGO_DATABASE_NAME: str = os.getenv("MONGO_DATABASE_NAME")
     MONGO_USERNAME: Optional[str] = os.getenv("MONGO_USERNAME")
     MONGO_PASSWORD: Optional[str] = os.getenv("MONGO_PASSWORD")
