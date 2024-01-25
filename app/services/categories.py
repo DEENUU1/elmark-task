@@ -73,18 +73,19 @@ def update_category_object(
     Returns:
     - CategoryUpdateSchema: The updated category as a CategoryUpdateSchema object.
     """
+    existing_category = collection.find_one({"name": category_name})
 
     # Check if the category with the specified name exists
-    existing_category = collection.find_one({"name": category_name})
     if existing_category is None:
         raise HTTPException(status_code=404, detail="Category not found")
 
     # Check if updating to the specified name would result in a duplicate category
-    duplicated_category = get_category_object(category.name, collection)
-    if duplicated_category:
-        raise HTTPException(status_code=400, detail="Category already exists")
+    if category.name != category_name:
+        duplicated_category = get_category_object(category.name, collection)
+        if duplicated_category:
+            raise HTTPException(status_code=400, detail="Category already exists")
 
-    update_data = {"$set": {"name": category.name}}
+    update_data = {"$set": {"name": category.name, "parent_name": category.parent_name}}
     collection.update_one({"name": category_name}, update_data)
 
     updated_category = collection.find_one({"name": category.name})
