@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from models.categories import Category
 from services.categories import (
@@ -11,6 +11,7 @@ from config.database import get_parts_collection, get_categories_collection
 from typing import Any, Dict
 from schemas.categories import CategorySchema, CategoryCreateSchema, CategoryUpdateSchema
 from fastapi import status
+from bson import ObjectId
 
 
 router = APIRouter(
@@ -58,6 +59,10 @@ def get_category(
     Raises:
         HTTPException: If the category is not found.
     """
+    # Check if id is valid ObjectId
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid id")
+
     return get_category_object(id, collection)
 
 
@@ -81,6 +86,9 @@ def update_category(
     Raises:
         HTTPException: If the category is not found or there is an error in the update process.
     """
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid id")
+
     return update_category_object(id, category, collection)
 
 
@@ -104,4 +112,7 @@ def delete_category(
     Raises:
         HTTPException: If the category is not found or there is an error in the deletion process.
     """
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid id")
+
     return delete_category_object(id, collection, collection_part)

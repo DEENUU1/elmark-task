@@ -10,6 +10,7 @@
 #### Short description of architecture
 I created my own database and deployed the project to an AWS EC2 instance. 
 I also used the Continuous Deployment (CD) technique using AWS Actions to automatically deploy code to an AWS EC2 instance
+Deployed version of this app is available at this address: http://13.49.58.212/docs
 
 <img src="assets/elmark-Strona-1.drawio.png" alt="architecture"/>
 <img src="assets/elmark-Strona-2.drawio.png" alt="architecture"/>
@@ -21,9 +22,6 @@ I chose the FastAPI framework because of:
 - The project is relatively small, with only 2 models/collections and a few basic endpoints for data operations
 
 #### API design
-- Id for Categories and serial_number for Parts
-
-
 - Used singular and don't mix them with plurals 
 ```
 /part
@@ -173,7 +171,7 @@ Response:
 </details>
 
 
-##### [GET] /api/v1/part/
+##### [GET] /api/v1/part/ (Search)
 <details>
   <summary><strong>cURL Example</strong></summary>
 
@@ -181,6 +179,7 @@ cURL:
 ```
 curl --location 'localhost:8000/api/v1/part/?name=Allen&description=Some&category=Allen&serial_number=aa'
 ```
+
 
 Response:
 ```
@@ -364,6 +363,8 @@ Or
 ```bash
 docker-compose up -d
 ```
+
+**Documentation is available at this address http://localhost:8000/docs**
 
 ## Authors
 
