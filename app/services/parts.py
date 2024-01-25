@@ -42,12 +42,32 @@ def get_part_object(
 def update_part_object(
         serial_number: str,
         part: Part,
-        collection: Any
+        collection: Any,
+        category_collection: Any
 ) -> PartSchema:
-    # Todo create model for update method
-    collection.update_one({"serial_number": serial_number}, {"$set": part.dict()})
-    inserted_part = collection.find_one({"serial_number": serial_number})
-    return PartSchema(**inserted_part)
+    existing_part = collection.find_one({"serial_number": serial_number})
+    if not existing_part:
+        raise HTTPException(status_code=404, detail="Part not found")
+
+    existing_category = get_category_object(part.category, category_collection)
+    if not existing_category:
+        raise HTTPException(status_code=404, detail="Category not found")
+
+    update_data = {
+        "$set": {
+            "name": part.name,
+            "description": part.description,
+            "category": part.category,
+            "quantity": part.quantity,
+            "price": part.price,
+            "location": part.location.model_dump(),
+        }
+    }
+
+    collection.update_one({"serial_number": serial_number}, update_data)
+
+    updated_part = collection.find_one({"serial_number": serial_number})
+    return PartSchema(**updated_part)
 
 
 def delete_part_object(

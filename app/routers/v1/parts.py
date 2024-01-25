@@ -40,9 +40,10 @@ def get_part(
 def update_part(
         serial_number: str,
         part: Part,
-        collection: Any = Depends(get_parts_collection)
+        collection: Any = Depends(get_parts_collection),
+        category_collection: Any = Depends(get_categories_collection)
 ) -> PartSchema:
-    return update_part_object(serial_number, part, collection)
+    return update_part_object(serial_number, part, collection, category_collection)
 
 
 @router.delete("/{serial_number}", status_code=status.HTTP_200_OK, response_model=Dict[str, str])
