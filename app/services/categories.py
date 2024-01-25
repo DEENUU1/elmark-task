@@ -3,7 +3,7 @@ from typing import Dict, Any
 from fastapi import HTTPException
 
 from models.categories import Category
-from schemas.categories import CategorySchema
+from schemas.categories import CategorySchema, CategoryUpdateSchema
 
 
 def create_category_object(
@@ -31,12 +31,22 @@ def get_category_object(
 
 def update_category_object(
         category_name: str,
-        category: Category,
+        category: CategoryUpdateSchema,
         collection: Any
-) -> CategorySchema:
-    collection.update_one({"category_name": category_name}, {"$set": category.dict()})
-    inserted_category = collection.find_one({"category_name": category_name})
-    return inserted_category
+) -> CategoryUpdateSchema:
+    existing_category = collection.find_one({"name": category_name})
+    if existing_category is None:
+        raise HTTPException(status_code=404, detail="Category not found")
+
+    duplicated_category = get_category_object(category.name, collection)
+    if duplicated_category:
+        raise HTTPException(status_code=400, detail="Category already exists")
+
+    update_data = {"$set": {"name": category.name}}
+    collection.update_one({"name": category_name}, update_data)
+
+    updated_category = collection.find_one({"name": category.name})
+    return CategoryUpdateSchema(**updated_category)
 
 
 def delete_category_object(

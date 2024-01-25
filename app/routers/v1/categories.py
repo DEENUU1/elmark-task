@@ -9,7 +9,7 @@ from services.categories import (
 )
 from config.database import get_parts_collection, get_categories_collection
 from typing import Any, Dict
-from schemas.categories import CategorySchema
+from schemas.categories import CategorySchema, CategoryUpdateSchema
 
 
 router = APIRouter(
@@ -34,12 +34,12 @@ def get_category(
     return get_category_object(name, collection)
 
 
-@router.put("/{name}", response_model=CategorySchema)
+@router.put("/{name}", response_model=CategoryUpdateSchema)
 def update_category(
         name: str,
-        category: Category,
+        category: CategoryUpdateSchema,
         collection: Any = Depends(get_categories_collection)
-) -> CategorySchema:
+) -> CategoryUpdateSchema:
     return update_category_object(name, category, collection)
 
 
