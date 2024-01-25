@@ -14,9 +14,9 @@ def get_db() -> Any:
 
 def get_categories_collection() -> Any:
     db = get_db()
-    yield db["categories"]
+    return db["categories"]
 
 
 def get_parts_collection() -> Any:
     db = get_db()
-    yield db["parts"]
+    return db["parts"]

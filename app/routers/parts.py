@@ -3,7 +3,7 @@ from typing import Dict, Any, List
 from fastapi import APIRouter, Depends
 from pymongo import MongoClient
 
-from config.database import get_db
+from config.database import get_db, get_categories_collection, get_parts_collection
 from models.parts import Part, SearchParams
 from services.parts import (
     create_part_object,
@@ -22,40 +22,40 @@ router = APIRouter(
 @router.post("/")
 def create_part(
         part: Part,
-        db: MongoClient = Depends(get_db)
+        collection: MongoClient = Depends(get_parts_collection)
 ) -> Dict[str, Any]:
-    return create_part_object(part, db)
+    return create_part_object(part, collection)
 
 
 @router.get("/{serial_number}")
 def get_part(
         serial_number: str,
-        db: MongoClient = Depends(get_db)
+        collection: MongoClient = Depends(get_parts_collection)
 ) -> Dict[str, Any]:
-    return get_part_object(serial_number, db)
+    return get_part_object(serial_number, collection)
 
 
 @router.post("/{serial_number}")
 def update_part(
         serial_number: str,
         part: Part,
-        db: MongoClient = Depends(get_db)
+        collection: MongoClient = Depends(get_parts_collection)
 ) -> Dict[str, Any]:
-    return update_part_object(serial_number, part, db)
+    return update_part_object(serial_number, part, collection)
 
 
 @router.delete("/{serial_number}")
 def delete_part(
         serial_number: str,
-        db: MongoClient = Depends(get_db)
+        collection: MongoClient = Depends(get_parts_collection)
 ) -> Dict[str, Any]:
-    return delete_part_object(serial_number, db)
+    return delete_part_object(serial_number, collection)
 
 
 @router.get("/")
 def list_search_parts(
         query_params: SearchParams = Depends(),
-        db: MongoClient = Depends(get_db)
+        collection: MongoClient = Depends(get_parts_collection)
 ) -> List[Dict[str, Any]]:
-    results = list_search_part_objects(query_params.dict(exclude_unset=True), db)
+    results = list_search_part_objects(query_params.dict(exclude_unset=True), collection)
     return results

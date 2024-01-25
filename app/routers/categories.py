@@ -3,7 +3,7 @@ from typing import Dict, Optional, Any
 from fastapi import APIRouter, Depends
 from pymongo import MongoClient
 
-from config.database import get_db, get_categories_collection, get_parts_collection
+from config.database import get_categories_collection, get_parts_collection
 from models.categories import Category
 from services.categories import (
     create_category_object,
@@ -21,26 +21,26 @@ router = APIRouter(
 @router.post("/")
 def create_category(
         category: Category,
-        db: MongoClient = Depends(get_db)
+        collection: MongoClient = Depends(get_categories_collection)
 ) -> Dict[str, Optional[str]]:
-    return create_category_object(category, db)
+    return create_category_object(category, collection)
 
 
 @router.get("/{name}")
 def get_category(
         name: str,
-        db: MongoClient = Depends(get_db)
+        collection: MongoClient = Depends(get_categories_collection)
 ) -> Dict[str, Optional[str]]:
-    return get_category_object(name, db)
+    return get_category_object(name, collection)
 
 
 @router.put("/{name}")
 def update_category(
         name: str,
         category: Category,
-        db: MongoClient = Depends(get_db)
+        collection: MongoClient = Depends(get_categories_collection)
 ) -> Dict[str, Optional[str]]:
-    return update_category_object(name, category, db)
+    return update_category_object(name, category, collection)
 
 
 @router.delete("/{name}")
