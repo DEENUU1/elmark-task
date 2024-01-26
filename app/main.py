@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from config.settings import settings
 from routers.api import router
-from typing import Dict, Any
+from typing import Dict
 from data.startup import category_load_startup_data, part_load_startup_data
 from config.database import get_parts_collection
 
