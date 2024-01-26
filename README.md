@@ -9,7 +9,7 @@
 ### Architecture
 #### Short description of architecture
 I created my own database and deployed the project to an AWS EC2 instance. 
-I also used the Continuous Deployment (CD) technique using Github Actions to automatically deploy code to an AWS EC2 instance
+I also used the Continuous Deployment (CD) technique using GitHub Actions to automatically deploy code to an AWS EC2 instance
 Deployed version of this app is available at this address: http://13.49.58.212/docs
 
 <img src="assets/elmark-Strona-1.drawio.png" alt="architecture"/>
@@ -36,8 +36,9 @@ I chose the FastAPI framework because of:
 - I used Pydantic to validate data in Part model:
   - quantity and price must be greater or equal 0
 - Search:
-  - User is able to search Parts by fields: serial_number, name, description, category
-  - I used regex to search Parts objects in Mongodb. It allows to match substrings that are provided by the user with those in the object field
+  - User is able to search Parts by fields: serial_number, name, description, category, room, bookcase, shelf, cuvette, column, row, min_price, max_price, min_quantity, max_quantity
+  - For serial_number, name, description, category, room, bookcase, shelf, cuvette, column and row I used regex to search Parts objects in Mongodb. It allows to match substrings that are provided by the user with those in the object field
+  - Using 'gte' and 'lte' allowed me to filter Parts by min_price, max_price, min_quantity and max_quantity
 
 ### Endpoints
 

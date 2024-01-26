@@ -152,9 +152,25 @@ def list_search_part_objects(
     - List[PartSchema]: A list of part objects that match the query parameters.
     """
     filter_query = {}
+
+    location_params = {
+        "room", "bookcase", "shelf", "cuvette", "column", "row"
+    }
+
     for key, value in query_params.items():
         if value is not None:
-            filter_query[key] = {"$regex": str(value), "$options": "i"}
+            if key in location_params:
+                filter_query[f"location.{key}"] = {"$regex": str(value), "$options": "i"}
+            elif key == "min_price":
+                filter_query["price"] = {"$gte": value}
+            elif key == "max_price":
+                filter_query["price"] = {"$lte": value}
+            elif key == "min_quantity":
+                filter_query["quantity"] = {"$gte": value}
+            elif key == "max_quantity":
+                filter_query["quantity"] = {"$lte": value}
+            else:
+                filter_query[key] = {"$regex": str(value), "$options": "i"}
 
     inserted_parts = list(collection.find(filter_query))
 
